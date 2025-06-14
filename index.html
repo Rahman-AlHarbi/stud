@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توزيع الطلاب على اللجان - اختبارات الفصل الدراسي الثالث ١٤٤٦ هـ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 35px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 6s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .ministry-logo {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .ministry-logo img {
+            width: 200px;
+            height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: all 0.3s ease;
+            z-index: 2;
+            position: relative;
+        }
+
+        .ministry-logo img:hover {
+            transform: scale(1.05) rotate(2deg);
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+        }
+
+        .main-content {
+            padding: 30px 35px;
+            background: white;
+        }
+
+        .main-title {
+            font-size: 2.4em;
+            font-weight: 900;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            animation: textGradient 8s ease infinite;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes textGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .exam-info {
+            font-size: 1.1em;
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .committees-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .committee-card {
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .committee-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .committee-card:hover::before {
+            left: 100%;
+        }
+
+        .committee-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .committee-card.active {
+            transform: scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .committee1-card { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .committee2-card { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .committee3-card { 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .committee-name {
+            font-size: 2em;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+
+        .click-hint {
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .committee-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            background: rgba(255, 255, 255, 0.95);
+            margin: -25px;
+            margin-top: 20px;
+            padding: 0 25px;
+            border-radius: 0 0 25px 25px;
+        }
+
+        .committee-details.active {
+            max-height: none;
+            padding: 25px 25px;
+            overflow: visible;
+        }
+
+        .grade-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 5px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grade-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .grade-section:hover {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            transform: translateX(10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .grade-section:hover::before {
+            transform: scaleX(1);
+        }
+
+        .grade-section.active {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-right-color: #f093fb;
+            transform: translateX(15px);
+        }
+
+        .grade-section.active::before {
+            transform: scaleX(1);
+        }
+
+        .grade-title {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grade-click-hint {
+            font-size: 0.85em;
+            color: #764ba2;
+            font-weight: 600;
+            animation: bounce 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .grade-section.active .grade-click-hint {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        .students-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            padding-top: 0;
+        }
+
+        .students-list.active {
+            max-height: none;
+            padding-top: 10px;
+            overflow: visible;
+        }
+
+        .student-name {
+            font-size: 1.05em;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-bottom: 1px dashed #dee2e6;
+            line-height: 1.5;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            white-space: normal;
+            word-wrap: break-word;
+            text-align: right;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .student-name:hover {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            color: #667eea;
+            transform: translateX(5px);
+            border-bottom-color: #667eea;
+        }
+
+        .student-name:last-child {
+            border-bottom: none;
+        }
+
+        .signature-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            border: 3px solid #dee2e6;
+            margin-top: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .signature-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .signature-role {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .signature-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .personal-logo {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .personal-logo-img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .personal-logo-img:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            border-color: #667eea;
+        }
+
+        .bottom-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* تصميم جدول الإحصائيات */
+        .statistics-section {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .statistics-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .statistics-title {
+            font-size: 1.4em;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .statistics-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-cell {
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .table-row:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .committee1-row:hover {
+            border-color: rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        }
+
+        .committee2-row:hover {
+            border-color: rgba(240, 147, 251, 0.3);
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.05), rgba(245, 87, 108, 0.05));
+        }
+
+        .committee3-row:hover {
+            border-color: rgba(79, 172, 254, 0.3);
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.05), rgba(0, 242, 254, 0.05));
+        }
+
+        .table-cell {
+            padding: 12px 20px;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .count-cell {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+            font-weight: 800;
+            font-size: 1.2em;
+            position: relative;
+        }
+
+        .count-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .table-row:hover .count-cell::before {
+            transform: scaleX(1);
+        }
+
+        .total-row {
+            background: linear-gradient(135deg, #667eea, #764ba2) !important;
+            color: white;
+            border: none !important;
+            margin-top: 10px;
+        }
+
+        .total-row:hover {
+            transform: translateX(0) scale(1.02);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .total-cell {
+            font-size: 1.2em;
+            font-weight: 800;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .total-count {
+            font-size: 1.4em;
+            font-weight: 900;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin: 5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                border-radius: 20px;
+                max-width: 95%;
+            }
+            
+            .main-content {
+                padding: 25px 20px;
+            }
+            
+            .committee-card {
+                padding: 20px;
+            }
+
+            .student-name {
+                font-size: 0.75em;
+                padding: 8px 10px;
+                min-height: 35px;
+                text-align: right;
+                line-height: 1.2;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .statistics-section {
+                padding: 20px;
+                margin-top: 25px;
+            }
+
+            .statistics-title {
+                font-size: 1.2em;
+            }
+
+            .header-cell, .table-cell {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+
+            .total-cell {
+                font-size: 1em;
+            }
+
+            .total-count {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-card">
+            <div class="ministry-logo">
+                <img src="images/school_logo.png" alt="شعار المدرسة">
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="main-title">توزيع الطلاب على اللجان</div>
+            <div class="exam-info">اختبارات الفصل الدراسي الثالث ١٤٤٦ هـ</div>
+
+            <div class="committees-container">
+                <div class="committee-card committee1-card" onclick="toggleCommitteeDetails(this)">
+                    <div class="committee-name">اللجنة الأولى</div>
+                    <div class="click-hint">اضغط هنا لعرض التفاصيل</div>
+                    <div class="committee-details">
+                        <div class="grade-section" onclick="event.stopPropagation(); toggleGradeDetails(this)">
+                            <div class="grade-title">
+                                الصف الرابع أ
+                                <span class="grade-click-hint">اضغط لعرض الطلاب</span>
+                            </div>
+                            <div class="students-list">
+                                <div class="student-name">أحمد عبد الفتاح عبد الله السبيهين</div>
+                                <div class="student-name">المثنى محمد عبد الله الغازي</div>
+                                <div class="student-name">أواب محمد صديق أحمد</div>
+                                <div class="student-name">حاتم محمد بن سفر المطيري</div>
+                                <div class="student-name">سعود مطلق مثال الرويس</div>
+                                <div class="student-name">سليمان سعيد بن محمد الشتوي</div>
+                                <div class="student-name">عبد الله مساعد بن عبد الله المدلول</div>
+                                <div class="student-name">عمار صنت بن عبد الله العتيبي</div>
+                                <div class="student-name">عمر سعيد محمد سعيد المصري</div>
+                                <div class="student-name">عمر محمد بن مطلق العتيبي</div>
+                                <div class="student-name">فارس باسل بن عبد العزيز المنيع</div>
+                                <div class="student-name">فارس محمد بن إبراهيم الثاقب</div>
+                                <div class="student-name">قصي حمزة وليد الحمود</div>
+                                <div class="student-name">محمد فهد بليدح الرحيمي المطيري</div>
+                                <div class="student-name">معاذ عبد العزيز سعيد العتيبي</div>
+                                <div class="student-name">مؤمن مأمون عبد المنعم بشير</div>
+                            </div>
+                        </div>
+                        <div class="grade-section" onclick="event.stopPropagation(); toggleGradeDetails(this)">
+                            <div class="grade-title">
+                                الصف الرابع ب
+                                <span class="grade-click-hint">اضغط لعرض الطلاب</span>
+                            </div>
+                            <div class="students-list">
+                                <div class="student-name">أسامة بدر بن مطلق العصيمي</div>
+                                <div class="student-name">تميم سليمان يوسف الجميعي</div>
+                                <div class="student-name">خالد مساعد خالد البقمي</div>
+                                <div class="student-name">سامي رامي بن عبدالله السيحاني</div>
+                                <div class="student-name">سلمان رشيد راشد الغبيوي</div>
+                                <div class="student-name">شمروخ ناصر شمروخ العتيبي</div>
+                                <div class="student-name">عبدالله أحمد عبدالحميد الصاوي</div>
+                                <div class="student-name">عبدالله إبراهيم بن صالح اليحيى</div>
+                                <div class="student-name">عبدالله مسلم عبدالله السبيعي</div>
+                                <div class="student-name">عبدالمجيد فهد محمد الطليحي</div>
+                                <div class="student-name">عبدالمجيد ماجد بن محمد الغامدي</div>
+                                <div class="student-name">عمر نايف ذايب العتيبي</div>
+                                <div class="student-name">محمد معضد بن عبدالله العتيبي</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="committee-card committee2-card" onclick="toggleCommitteeDetails(this)">
+                    <div class="committee-name">اللجنة الثانية</div>
+                    <div class="click-hint">اضغط هنا لعرض التفاصيل</div>
+                    <div class="committee-details">
+                        <div class="grade-section" onclick="event.stopPropagation(); toggleGradeDetails(this)">
+                            <div class="grade-title">
+                                الصف الخامس أ
+                                <span class="grade-click-hint">اضغط لعرض الطلاب</span>
+                            </div>
+                            <div class="students-list">
+                                <div class="student-name">أحمد محمد شعبان إبراهيم</div>
+                                <div class="student-name">تركي عويض مقبل الحربي</div>
+                                <div class="student-name">حمزة عبد القادر محمود محمد محمود</div>
+                                <div class="student-name">عبد المجيد محمد بن عبد الله الحسن</div>
+                                <div class="student-name">عزام خالد بن محمد الرشيدان</div>
+                                <div class="student-name">علي عبد الرحمن بن عبد الله الغامدي</div>
+                                <div class="student-name">عمار عبد القادر محمود محمد</div>
+                                <div class="student-name">فيصل فهد بن رويق الشراري</div>
+                                <div class="student-name">مالك خالد شريد المطيري</div>
+                                <div class="student-name">مجاهد حمد حسين إرشاد</div>
+                                <div class="student-name">محمد عبدالرحمن صالح الزير</div>
+                                <div class="student-name">محمد عطالله حسين السيحاني</div>
+                                <div class="student-name">محمد مشعل محمد السيحاني</div>
+                                <div class="student-name">منصور ممدوح منصور العتيبي</div>
+                            </div>
+                        </div>
+                        <div class="grade-section" onclick="event.stopPropagation(); toggleGradeDetails(this)">
+                            <div class="grade-title">
+                                الصف الخامس ب
+                                <span class="grade-click-hint">اضغط لعرض الطلاب</span>
+                            </div>
+                            <div class="students-list">
+                                <div class="student-name">إبراهيم عبدالعزيز بن إبراهيم المحيميد</div>
+                                <div class="student-name">تركي فيصل صنيتان العتيبي</div>
+                                <div class="student-name">حاتم همام عبدالرحمن الحميضي</div>
+                                <div class="student-name">حاكم بندر بن ناهض السيحاني</div>
+                                <div class="student-name">حسن عبدالرحمن بن حسن الشويعر</div>
+                                <div class="student-name">خالد عبدالرحمن مروي العتيبي</div>
+                                <div class="student-name">عبدالعزيز حسن أحمد الدغاري</div>
+                                <div class="student-name">عبدالله إبراهيم محمد المقحم</div>
+                                <div class="student-name">عبدالله عبدالعزيز المهنا</div>
+                                <div class="student-name">عبدالمجيد صابر خرفوش العدواني</div>
+                                <div class="student-name">غيث محمد غازي العتيبي</div>
+                                <div class="student-name">محمد عبدالله محمد الحامد</div>
+                                <div class="student-name">محمد فيصل صنيتان العتيبي</div>
+                                <div class="student-name">موسى عبدالرحمن محمد حامدي</div>
+                                <div class="student-name">يزن بليهد محمد البليهد</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="committee-card committee3-card" onclick="toggleCommitteeDetails(this)">
+                    <div class="committee-name">اللجنة الثالثة</div>
+                    <div class="click-hint">اضغط هنا لعرض التفاصيل</div>
+                    <div class="committee-details">
+                        <div class="grade-section" onclick="event.stopPropagation(); toggleGradeDetails(this)">
+                            <div class="grade-title">
+                                الصف السادس أ
+                                <span class="grade-click-hint">اضغط لعرض الطلاب</span>
+                            </div>
+                            <div class="students-list">
+                                <div class="student-name">أحمد حمد أحمد الصايغ</div>
+                                <div class="student-name">البراء فهد راشد الحربي</div>
+                                <div class="student-name">حسين عطاالله حسين السيحاني</div>
+                                <div class="student-name">حسين محمد حسين القاسمي</div>
+                                <div class="student-name">خالد محمد بن لافي العتيبي</div>
+                                <div class="student-name">دخيل الله متروك دخيل الله العتيبي</div>
+                                <div class="student-name">رائد ماجد عماش العتيبي</div>
+                                <div class="student-name">صابر عاصم إبراهيم</div>
+                                <div class="student-name">عامر مداوي الحكمي</div>
+                                <div class="student-name">عبد الرحيم فخر الدين أحمد</div>
+                                <div class="student-name">عبدالرحمن خالد عبد ربه إسماعيل</div>
+                                <div class="student-name">عبد الرحمن صالح بن إبراهيم الغماس</div>
+                                <div class="student-name">عبد العزيز نجيب بن خرفوش العدواني</div>
+                                <div class="student-name">عمران عبده خليل</div>
+                                <div class="student-name">محمد نجم الدين يوسف العبيد</div>
+                                <div class="student-name">محمد أحمد محمد العولقي</div>
+                                <div class="student-name">ناصر جازي علي العتيبي</div>
+                                <div class="student-name">نايف ناصر بن عايش الحافي</div>
+                                <div class="student-name">يوسف صدام أحمد البادي</div>
+                            </div>
+                        </div>
+                        <div class="grade-section" onclick="event.stopPropagation(); toggleGradeDetails(this)">
+                            <div class="grade-title">
+                                الصف السادس ب
+                                <span class="grade-click-hint">اضغط لعرض الطلاب</span>
+                            </div>
+                            <div class="students-list">
+                                <div class="student-name">أحمد محمد عثمان محمد</div>
+                                <div class="student-name">أنس صلاح محمد اليحيي</div>
+                                <div class="student-name">أيمن أمان الله ياسا مياه</div>
+                                <div class="student-name">بندر متلع بن سعود العتيبي</div>
+                                <div class="student-name">سلمان ماجد حميدي العتيبي</div>
+                                <div class="student-name">عبد الرحمن محمد بن سالم السالم</div>
+                                <div class="student-name">عبدالعزيز إبراهيم بن إبراهيم المهنا</div>
+                                <div class="student-name">عبدالعزيز ناصر بن عبد الله العتيبي</div>
+                                <div class="student-name">عبد الله أحمد عبد الله الحميزي</div>
+                                <div class="student-name">عبد الملك شباب بن إبراهيم العصيمي</div>
+                                <div class="student-name">عبدالمجيد عبدالرحمن ضيف الله العتيبي</div>
+                                <div class="student-name">عروة عبد الرحمن ذاكر حسن</div>
+                                <div class="student-name">فهد بدر فهد الجبر</div>
+                                <div class="student-name">مالك عبد اللطيف عبدالعزيز العبد اللطيف</div>
+                                <div class="student-name">محمد أحمد بن حسن خواجي</div>
+                                <div class="student-name">محمد جمال محمد السيحاني</div>
+                                <div class="student-name">محمد خالد محمد المطيري</div>
+                                <div class="student-name">محمد عبد العزيز بن محمد الحميد</div>
+                                <div class="student-name">محمد فدغوش العتيبي</div>
+                                <div class="student-name">مهند خالد بن محمد الرشيدان</div>
+                                <div class="student-name">ياسر أحمد بن إبراهيم الثاقب</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- جدول أعداد الطلاب -->
+            <div class="statistics-section">
+                <div class="statistics-title">أعداد الطلاب في اللجان</div>
+                <div class="statistics-table">
+                    <div class="table-header">
+                        <div class="header-cell">اللجنة</div>
+                        <div class="header-cell">عدد الطلاب</div>
+                    </div>
+                    <div class="table-row committee1-row">
+                        <div class="table-cell">اللجنة الأولى</div>
+                        <div class="table-cell count-cell">29</div>
+                    </div>
+                    <div class="table-row committee2-row">
+                        <div class="table-cell">اللجنة الثانية</div>
+                        <div class="table-cell count-cell">29</div>
+                    </div>
+                    <div class="table-row committee3-row">
+                        <div class="table-cell">اللجنة الثالثة</div>
+                        <div class="table-cell count-cell">40</div>
+                    </div>
+                    <div class="table-row total-row">
+                        <div class="table-cell total-cell">المجموع الكلي</div>
+                        <div class="table-cell total-count">98</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="signature-section">
+                <div class="signature-role">مدير المدرسة</div>
+                <div class="signature-name">فرحان بن محمد السيحاني</div>
+            </div>
+
+            <!-- شعارك الشخصي -->
+            <div class="personal-logo">
+                <img src="images/personal_logo.png" alt="الشعار الشخصي" class="personal-logo-img">
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-indicator"></div>
+
+    <script>
+        function toggleCommitteeDetails(card) {
+            const details = card.querySelector('.committee-details');
+            const isActive = card.classList.contains('active');
+            
+            // إغلاق جميع اللجان المفتوحة
+            document.querySelectorAll('.committee-card').forEach(c => {
+                c.classList.remove('active');
+                c.querySelector('.committee-details').classList.remove('active');
+            });
+            
+            // فتح اللجنة المحددة إذا لم تكن مفتوحة
+            if (!isActive) {
+                card.classList.add('active');
+                details.classList.add('active');
+            }
+        }
+
+        function toggleGradeDetails(gradeSection) {
+            const studentsList = gradeSection.querySelector('.students-list');
+            const isActive = gradeSection.classList.contains('active');
+            
+            // إغلاق جميع الصفوف المفتوحة في نفس اللجنة
+            const committee = gradeSection.closest('.committee-details');
+            committee.querySelectorAll('.grade-section').forEach(g => {
+                g.classList.remove('active');
+                g.querySelector('.students-list').classList.remove('active');
+            });
+            
+            // فتح الصف المحدد إذا لم يكن مفتوحاً
+            if (!isActive) {
+                gradeSection.classList.add('active');
+                studentsList.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
